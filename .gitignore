@@ -1,0 +1,2 @@
+# Ignore Jupyter checkpoint files that are not meant for GitHub rendering
+**/.ipynb_checkpoints/
