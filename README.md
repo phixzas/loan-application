@@ -162,7 +162,7 @@ TotalIncome = ApplicantIncome + CoapplicantIncome
 LoanIncomeRatio = LoanAmount / TotalIncome
 LoanTermYears = Loan_Amount_Term / 12
 
-SQL Analysis
+# 5. SQL Analysis
 
 SQL was used to perform additional analysis of the loan application data.
 
@@ -272,7 +272,6 @@ This indicates that credit and financial characteristics played an important rol
 Demographic variables such as gender, marital status, and self-employment had comparatively lower feature importance in the final model.
 
 Feature importance indicates which variables were useful to the model for prediction; it does not by itself establish a causal relationship between a feature and loan approval.
-
 10. Power BI Dashboard
 
 An interactive Power BI dashboard was developed to communicate the major findings from the analysis.
