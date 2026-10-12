@@ -10,10 +10,69 @@ model = pickle.load(open(model_path, 'rb'))
 st.title("Loan Approval Predictor")
 st.write("Professional loan eligibility checker")
 
+st.markdown(
+    """
+    <style>
+    div.stButton > button {
+        display: block;
+        margin: 0 auto;
+        width: 220px;
+        height: 52px;
+        font-size: 22px;
+        font-weight: 700;
+        border-radius: 12px;
+        background: linear-gradient(90deg, #1f77b4 0%, #4caf50 100%);
+        color: white;
+        border: none;
+    }
+    div.stButton > button:hover {
+        transform: scale(1.02);
+    }
+    .stSuccess, .stError {
+        font-size: 1.25rem;
+        padding: 1rem 1.2rem;
+        border-radius: 0.75rem;
+    }
+    div[data-testid="stNumberInputRoot"] {
+        position: relative;
+    }
+    div[data-testid="stNumberInputRoot"] > label {
+        display: block;
+    }
+    div[data-testid="stNumberInputRoot"] input {
+        padding-left: 26px;
+    }
+    div[data-testid="stNumberInputRoot"]::before {
+        content: "$";
+        position: absolute;
+        left: 12px;
+        top: 52%;
+        transform: translateY(-50%);
+        font-weight: 700;
+        color: #4b5563;
+        z-index: 1;
+        pointer-events: none;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+def currency_input(label, default_value=0.0):
+    value = st.text_input(label, value=f"${default_value:,.0f}", placeholder="$0")
+    cleaned = value.replace("$", "").replace(",", "").strip()
+    if cleaned == "":
+        return 0.0
+    try:
+        return float(cleaned)
+    except ValueError:
+        st.error(f"{label}: please enter a valid dollar amount.")
+        st.stop()
+
 # Professional inputs
-applicant_income = st.number_input("Applicant Income", min_value=0.0, value=0.0, step=1000.0, format="%.0f")
-coapplicant_income = st.number_input("Coapplicant Income", min_value=0.0, value=0.0, step=1000.0, format="%.0f")
-loan_amount = st.number_input("Loan Amount Requested", min_value=50.0, value=100.0, step=1000.0, format="%.0f")
+applicant_income = currency_input("Applicant Income", 0.0)
+coapplicant_income = currency_input("Coapplicant Income", 0.0)
+loan_amount = currency_input("Loan Amount Requested", 100000.0)
 loantermyears = st.number_input("Loan Term (in Years)", min_value=1, max_value=400, value=1, step=1, format="%d")
 dependents_option = st.selectbox("Number of Dependents", ["Select Number of Dependents", "0", "1", "2", "3+"])
 
@@ -70,6 +129,6 @@ if st.button("Predict"):
     proba = model.predict_proba(features)[0][1]
 
     if prediction == 1:
-        st.success(f"✅ Loan APPROVED! Confidence: {proba*100:.1f}%")
+        st.success(f"✅ LOAN APPROVED! Confidence: {proba*100:.1f}%")
     else:
-        st.error(f"❌ Loan NOT APPROVED. Confidence: {(1-proba)*100:.1f}%")
+        st.error(f"❌ LOAN NOT APPROVED! Confidence: {(1-proba)*100:.1f}%")
