@@ -72,7 +72,7 @@ def currency_input(label, default_value=0.0):
 # Professional inputs
 applicant_income = currency_input("Applicant Income", 0.0)
 coapplicant_income = currency_input("Coapplicant Income", 0.0)
-loan_amount = currency_input("Loan Amount Requested", 100000.0)
+loan_amount = currency_input("Loan Amount Requested", 100.0)
 loantermyears = st.number_input("Loan Term (in Years)", min_value=1, max_value=400, value=1, step=1, format="%d")
 dependents_option = st.selectbox("Number of Dependents", ["Select Number of Dependents", "0", "1", "2", "3+"])
 
