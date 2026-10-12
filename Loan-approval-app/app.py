@@ -15,16 +15,31 @@ applicant_income = st.number_input("Applicant Income", min_value=0.0, value=0.0,
 coapplicant_income = st.number_input("Coapplicant Income", min_value=0.0, value=0.0, step=1000.0, format="%.0f")
 loan_amount = st.number_input("Loan Amount Requested", min_value=50.0, value=100.0, step=1000.0, format="%.0f")
 loantermyears = st.number_input("Loan Term (in Years)", min_value=1, max_value=400, value=1, step=1, format="%d")
-dependents_option = st.selectbox("Number of Dependents", ["0", "1", "2", "3+"])
+dependents_option = st.selectbox("Number of Dependents", ["Select Number of Dependents", "0", "1", "2", "3+"])
 
-credit_history = st.selectbox("Credit History", ["Good", "Bad", "Don't have"])
-gender = st.selectbox("Gender", ["Male", "Female"])
-married = st.selectbox("Married?", ["Yes", "No"])
-education = st.selectbox("Education", ["Graduate", "Not Graduate"])
-self_employed = st.selectbox("Self Employed?", ["Yes", "No"])
-property_area = st.selectbox("Property Area", ["Rural", "Semiurban", "Urban"])
+credit_history = st.selectbox("Credit History", ["Select Credit History", "Good (1)", "Bad (0)", "Don't have (-1)"])
+gender = st.selectbox("Gender", ["Select Gender", "Male", "Female"])
+married = st.selectbox("Married?", ["Select Marital Status", "Yes", "No"])
+education = st.selectbox("Education", ["Select Education", "Graduate", "Not Graduate"])
+self_employed = st.selectbox("Self Employed?", ["Select Employment Status", "Yes", "No"])
+property_area = st.selectbox("Property Area", ["Select Property Area", "Rural", "Semiurban", "Urban"])
 
 if st.button("Predict"):
+    required_fields = {
+        "Number of Dependents": dependents_option,
+        "Credit History": credit_history,
+        "Gender": gender,
+        "Married": married,
+        "Education": education,
+        "Self Employed": self_employed,
+        "Property Area": property_area,
+    }
+
+    for label, value in required_fields.items():
+        if value.startswith("Select"):
+            st.error(f"Please choose an option for: {label}.")
+            st.stop()
+
     total_income = applicant_income + coapplicant_income
     total_income_log = np.log1p(total_income)
     loan_income_ratio = loan_amount / total_income if total_income > 0 else 0.0
@@ -32,9 +47,9 @@ if st.button("Predict"):
 
     # Match the exact feature order used in training
     dependents = 3 if dependents_option == "3+" else int(dependents_option)
-    if credit_history == "Good":
+    if credit_history == "Good (1)":
         credit_history_val = 1
-    elif credit_history == "Bad":
+    elif credit_history == "Bad (0)":
         credit_history_val = 0
     else:
         credit_history_val = -1
