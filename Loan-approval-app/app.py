@@ -11,13 +11,13 @@ st.title("Loan Approval Predictor")
 st.write("Professional loan eligibility checker")
 
 # Professional inputs
-applicant_income = st.number_input("Applicant Income", min_value=0.0, value=20000.0, step=1000.0, format="%.0f")
+applicant_income = st.number_input("Applicant Income", min_value=0.0, value=0.0, step=1000.0, format="%.0f")
 coapplicant_income = st.number_input("Coapplicant Income", min_value=0.0, value=0.0, step=1000.0, format="%.0f")
-loan_amount = st.number_input("Loan Amount Requested", min_value=50.0, value=50000.0, step=1000.0, format="%.0f")
-loantermyears = st.number_input("Loan Term (in Years)", min_value=1, max_value=400, value=5, step=1, format="%d")
+loan_amount = st.number_input("Loan Amount Requested", min_value=50.0, value=100.0, step=1000.0, format="%.0f")
+loantermyears = st.number_input("Loan Term (in Years)", min_value=1, max_value=400, value=1, step=1, format="%d")
 dependents_option = st.selectbox("Number of Dependents", ["0", "1", "2", "3+"])
 
-credit_history = st.selectbox("Credit History", ["Good (1)", "Bad (0)", "Don't have (-1)"])
+credit_history = st.selectbox("Credit History", ["Good", "Bad", "Don't have"])
 gender = st.selectbox("Gender", ["Male", "Female"])
 married = st.selectbox("Married?", ["Yes", "No"])
 education = st.selectbox("Education", ["Graduate", "Not Graduate"])
@@ -32,7 +32,12 @@ if st.button("Predict"):
 
     # Match the exact feature order used in training
     dependents = 3 if dependents_option == "3+" else int(dependents_option)
-    credit_history_val = 1 if "Good" in credit_history else 0
+    if credit_history == "Good":
+        credit_history_val = 1
+    elif credit_history == "Bad":
+        credit_history_val = 0
+    else:
+        credit_history_val = -1
     gender_male = 1 if gender == "Male" else 0
     married_yes = 1 if married == "Yes" else 0
     education_not_graduate = 1 if education == "Not Graduate" else 0
